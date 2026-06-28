@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💌 Для Діани · щирий лист</title>
+  <!-- Font & basic styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Quicksand', sans-serif;
+      background: radial-gradient(circle at 20% 30%, #1a0b1a, #2d142c);
+      padding: 1.5rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* ---- animated background (floating hearts & glow) ---- */
+    .bg-animation {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .bg-heart {
+      position: absolute;
+      bottom: -10%;
+      font-size: 2.2rem;
+      opacity: 0.15;
+      color: #ffb7c5;
+      animation: floatUp linear infinite;
+      user-select: none;
+      text-shadow: 0 0 20px #ff99aa;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0.1; }
+      10% { opacity: 0.2; }
+      90% { opacity: 0.2; }
+      100% { transform: translateY(-120vh) rotate(20deg) scale(1.2); opacity: 0; }
+    }
+
+    /* extra glowing orbs */
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.25;
+      animation: pulseGlow 8s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0% { transform: scale(1); opacity: 0.15; }
+      100% { transform: scale(1.4); opacity: 0.35; }
+    }
+
+    /* ---- main card ---- */
+    .letter-card {
+      position: relative;
+      z-index: 10;
+      max-width: 820px;
+      width: 100%;
+      background: rgba(30, 14, 30, 0.65);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 48px 24px 48px 24px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 200, 210, 0.15);
+      padding: 2rem 2rem 2.2rem;
+      border: 1px solid rgba(255, 180, 190, 0.15);
+      transition: box-shadow 0.3s;
+    }
+
+    .letter-card:hover {
+      box-shadow: 0 40px 80px rgba(200, 80, 120, 0.2), 0 0 0 2px rgba(255, 180, 200, 0.1);
+    }
+
+    /* header / title */
+    .letter-header {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 1.8rem;
+      border-bottom: 1px solid rgba(255, 160, 180, 0.15);
+      padding-bottom: 1rem;
+    }
+
+    .letter-header h1 {
+      font-size: 2rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      color: #ffe2e8;
+      text-shadow: 0 0 20px #ff8caa55;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .letter-header h1 span {
+      background: linear-gradient(135deg, #ffb0c0, #ff7a9e);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 600;
+    }
+
+    .header-icon {
+      font-size: 2.2rem;
+      filter: drop-shadow(0 0 10px #ff99aa);
+    }
+
+    /* scroll container — exactly the message, word-for-word */
+    .scroll-container {
+      max-height: 420px;
+      overflow-y: auto;
+      padding-right: 8px;
+      margin-top: 0.5rem;
+      scroll-behavior: smooth;
+      border-radius: 20px;
+      background: rgba(20, 8, 20, 0.25);
+      padding: 1.2rem 1.5rem 1.2rem 1.5rem;
+      border: 1px solid rgba(255, 180, 190, 0.06);
+      backdrop-filter: blur(4px);
+      transition: all 0.2s;
+    }
+
+    /* custom scroll */
+    .scroll-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .scroll-container::-webkit-scrollbar-track {
+      background: rgba(255, 200, 210, 0.05);
+      border-radius: 20px;
+    }
+
+    .scroll-container::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #ff9aaf, #d46a84);
+      border-radius: 20px;
+      box-shadow: 0 0 20px #ff7a9e55;
+    }
+
+    .scroll-container::-webkit-scrollbar-thumb:hover {
+      background: #ff88a0;
+    }
+
+    /* message text — exactly as provided, no changes */
+    .message-text {
+      font-size: 1.08rem;
+      line-height: 1.75;
+      color: #f5e3ea;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .message-text p {
+      margin-bottom: 1.2rem;
+    }
+
+    .message-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* decorative quote / signature */
+    .letter-footer {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 1rem;
+      border-top: 1px solid rgba(255, 160, 180, 0.1);
+      padding-top: 1.2rem;
+      color: #dbb8c4;
+      font-size: 0.95rem;
+      font-weight: 300;
+      flex-wrap: wrap;
+    }
+
+    .letter-footer .signature {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 180, 200, 0.08);
+      padding: 0.3rem 1.2rem 0.3rem 1rem;
+      border-radius: 60px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 180, 200, 0.08);
+    }
+
+    .letter-footer .signature span {
+      font-weight: 500;
+      color: #ffb7c5;
+    }
+
+    .letter-footer .emoji-deco {
+      font-size: 1.4rem;
+      filter: drop-shadow(0 0 8px #ff88aa);
+    }
+
+    /* small scroll indicator */
+    .scroll-hint {
+      display: flex;
+      justify-content: center;
+      margin-top: 0.7rem;
+      font-size: 0.8rem;
+      color: #b38896;
+      letter-spacing: 2px;
+      gap: 6px;
+      opacity: 0.7;
+      align-items: center;
+    }
+
+    .scroll-hint i {
+      font-style: normal;
+      animation: pulseArrow 2s infinite;
+    }
+
+    @keyframes pulseArrow {
+      0% { opacity: 0.3; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(4px); }
+      100% { opacity: 0.3; transform: translateY(0); }
+    }
+
+    /* responsive */
+    @media (max-width: 600px) {
+      .letter-card {
+        padding: 1.2rem 1rem 1.5rem;
+        border-radius: 32px 16px 32px 16px;
+      }
+      .letter-header h1 {
+        font-size: 1.5rem;
+      }
+      .scroll-container {
+        max-height: 340px;
+        padding: 1rem 1rem;
+      }
+      .message-text {
+        font-size: 0.98rem;
+        line-height: 1.65;
+      }
+      .letter-footer {
+        flex-direction: column;
+        align-items: flex-end;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .letter-header h1 {
+        font-size: 1.25rem;
+        flex-wrap: wrap;
+      }
+      .scroll-container {
+        max-height: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ANIMATED BACKGROUND -->
+  <div class="bg-animation" aria-hidden="true">
+    <div class="glow-orb" style="width: 400px; height: 400px; background: #ff5f7a; top: -10%; left: -5%;"></div>
+    <div class="glow-orb" style="width: 500px; height: 500px; background: #a14a6b; bottom: -10%; right: -5%; animation-duration: 12s;"></div>
+    <div class="glow-orb" style="width: 300px; height: 300px; background: #c45a7a; top: 40%; left: 70%; opacity: 0.15;"></div>
+
+    <!-- floating hearts -->
+    <div class="bg-heart" style="left: 8%; animation-duration: 18s; font-size: 2.8rem;">♥</div>
+    <div class="bg-heart" style="left: 22%; animation-duration: 22s; font-size: 2rem; animation-delay: 2s;">♥</div>
+    <div class="bg-heart" style="left: 45%; animation-duration: 25s; font-size: 3rem; animation-delay: 4s;">♥</div>
+    <div class="bg-heart" style="left: 68%; animation-duration: 20s; font-size: 2.2rem; animation-delay: 1s;">♥</div>
+    <div class="bg-heart" style="left: 85%; animation-duration: 23s; font-size: 2.6rem; animation-delay: 3s;">♥</div>
+    <div class="bg-heart" style="left: 92%; animation-duration: 19s; font-size: 1.8rem; animation-delay: 5s;">♥</div>
+    <div class="bg-heart" style="left: 15%; animation-duration: 26s; font-size: 2rem; animation-delay: 6s;">♥</div>
+    <div class="bg-heart" style="left: 55%; animation-duration: 21s; font-size: 2.4rem; animation-delay: 2.5s;">♥</div>
+  </div>
+
+  <!-- MAIN LETTER CARD -->
+  <div class="letter-card">
+    <div class="letter-header">
+      <div class="header-icon">💌</div>
+      <h1>
+        для <span>Діани</span>
+      </h1>
+    </div>
+
+    <!-- scroll container with the exact message -->
+    <div class="scroll-container" id="scrollMessage">
+      <div class="message-text">
+        <p>( Діано, іноді я думаю: «Шкода, що все не могло бути інакше». Іноді мені справді стає трохи сумно. Я не можу зробити для тебе нічого особливого, я не можу подарувати тобі жодного подарунка, я не можу пограти з тобою, і є ще багато речей, яких ми не можемо робити разом — наприклад, разом їсти, разом дивитися якусь хорошу кіношку, разом насолоджуватися, у реальному житті регулярно зустрічатися, трохи дражнити один одного, жити разом і створювати багато веселих спогадів.</p>
+        <p>Але насправді все між нами дуже сильно відрізняється. Якби ситуація була хоч трохи кращою, то я сам зробив би все настільки цікавим, що тобі було б дуже весело. Уяви, якби я жив у твоїй країні, ми б зустрічалися хоча б раз на місяць або принаймні раз на шість місяців. Я б кожен місяць надсилав тобі якийсь подарунок, від якого ти була б дуже-дуже щаслива. Через це наша дружба ставала б ще глибшою, а твоє ставлення до мене — ще кращим.</p>
+        <p>Але на жаль, ми живемо так далеко, що скільки б я не хотів, я нічого не можу зробити. Іноді мені дуже сильно хочеться просто провести з тобою наодинці трохи часу, здивувати тебе. Не знаю, чому я раптом сьогодні думаю про все це. Я навіть не знаю, який у тебе зараз настрій. Після прочитання цього ти розсердишся чи просто відреагуєш нормально.</p>
+        <p>Розмовляти з тобою — це для мене найкраще, це розслаблює мій розум і приносить мені радість. Я ще раз хочу подякувати тобі за те, що ти стала моїм найкращим другом і розмовляєш зі мною. І так, якщо тобі щось у моїх словах здалося поганим, будь ласка, вибач мене. Коли мені випаде шанс, я постараюся зробити для тебе найкраще, що зможу.</p>
+        <p>Діано, залишайся завжди моїм другом. Сьогодні я трохи емоційний, сам не знаю чому, можливо, через сімейні проблеми. )</p>
+      </div>
+    </div>
+
+    <!-- subtle scroll hint (engaging) -->
+    <div class="scroll-hint">
+      <span>✧</span> гортай, щоб прочитати <span>✧</span>
+      <i>↓</i>
+    </div>
+
+    <!-- footer with love -->
+    <div class="letter-footer">
+      <div class="signature">
+        <span>♥</span> твій друг <span>·</span> завжди поруч
+      </div>
+      <div class="emoji-deco">✨🌙</div>
+    </div>
+  </div>
+
+  <!-- tiny script: smooth auto-scroll hint (optional) but not intrusive -->
+  <script>
+    (function() {
+      const scrollBox = document.getElementById('scrollMessage');
+      if (!scrollBox) return;
+
+      // subtle pulse to show scrolling is possible (only if content overflows)
+      function checkOverflow() {
+        if (scrollBox.scrollHeight > scrollBox.clientHeight) {
+          // add a tiny class if needed — but not necessary, the hint is always visible
+        }
+      }
+      window.addEventListener('load', checkOverflow);
+      window.addEventListener('resize', checkOverflow);
+      checkOverflow();
+
+      // optional: if user hovers, gentle reminder but we keep it clean
+    })();
+  </script>
+
+</body>
+</html>
